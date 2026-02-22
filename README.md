@@ -114,13 +114,6 @@ PantaiTimor/
 ```
 **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`
 
-**Examples:**
-```
-[LAB3] feat: Add Course class with getter and setter methods
-[LAB4] fix: Resolve array out-of-bound error in course search
-[LAB5] docs: Update Javadoc comments for Student class
-```
-
 ### Pull Request Rules
 - All changes via Pull Request to `develop` branch
 - Minimum **1 reviewer** approval required
