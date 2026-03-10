@@ -1,9 +1,9 @@
 <!--
   File: course-profile.html
   Author: Muhammad Zakariyya Bin Ahmad Radzif
-  Date: 23/02/2026
+  Date: 02/03/2026
   Description: Course Profile management page for SLMS.
-               Supports Create, Search, and View All courses.
+               Supports Create, Search, Edit, Delete and View All courses.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -81,9 +81,85 @@
       <div id="searchResult" class="course-detail" style="margin-top: 16px;"></div>
     </div>
 
+    <!-- ========== EDIT COURSE ========== -->
+    <div class="card">
+      <h2 class="card-title">Edit Course</h2>
+      <div id="editMessage" class="message"></div>
+
+      <!-- Step 1: Search for course to edit -->
+      <form id="editSearchForm">
+        <div class="search-bar">
+          <div class="form-group">
+            <label for="editSearchCode">Search Course Code to Edit</label>
+            <input type="text" id="editSearchCode" placeholder="e.g. CSEB5223">
+          </div>
+          <button type="submit" class="btn btn-primary">Find</button>
+        </div>
+      </form>
+
+      <!-- Step 2: Edit form (hidden until course found) -->
+      <div id="editFormContainer" class="course-detail" style="margin-top: 16px;">
+        <form id="editForm">
+          <div class="form-group">
+            <label for="editCourseCode">Course Code (cannot be changed)</label>
+            <input type="text" id="editCourseCode" readonly
+                   style="background-color: #e9ecef; cursor: not-allowed;">
+          </div>
+          <div class="form-group">
+            <label for="editCourseName">Course Name</label>
+            <input type="text" id="editCourseName" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editCreditHour">Credit Hour</label>
+              <input type="number" id="editCreditHour" min="1" max="6" required>
+            </div>
+            <div class="form-group">
+              <label for="editMsTeamsLink">MS Teams Link</label>
+              <input type="url" id="editMsTeamsLink">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editCourseSummary">Course Summary</label>
+            <textarea id="editCourseSummary" required></textarea>
+          </div>
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" class="btn btn-secondary" onclick="hideEditForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Display edited course to validate changes -->
+      <div id="editedResult" class="course-detail" style="margin-top: 16px;"></div>
+    </div>
+
+    <!-- ========== DELETE COURSE ========== -->
+    <div class="card">
+      <h2 class="card-title">Delete Course</h2>
+      <div id="deleteMessage" class="message"></div>
+
+      <!-- Step 1: Search for course to delete -->
+      <form id="deleteSearchForm">
+        <div class="search-bar">
+          <div class="form-group">
+            <label for="deleteSearchCode">Search Course Code to Delete</label>
+            <input type="text" id="deleteSearchCode" placeholder="e.g. CSEB5223">
+          </div>
+          <button type="submit" class="btn btn-danger">Find</button>
+        </div>
+      </form>
+
+      <!-- Step 2: Confirm deletion (hidden until course found) -->
+      <div id="deleteConfirmContainer" class="course-detail" style="margin-top: 16px;"></div>
+    </div>
+
     <!-- ========== VIEW ALL COURSES ========== -->
     <div class="card">
-      <h2 class="card-title">All Courses</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">All Courses</h2>
+        <span id="totalCourses" style="font-size: 14px; color: #666;">Total: 0 course(s)</span>
+      </div>
       <div class="table-container">
         <table>
           <thead>
@@ -93,11 +169,12 @@
               <th>Course Name</th>
               <th>Credit Hour</th>
               <th>Summary</th>
+              <th>MS Teams</th>
             </tr>
           </thead>
           <tbody id="courseTableBody">
             <tr>
-              <td colspan="5" style="text-align: center; color: #888;">
+              <td colspan="6" style="text-align: center; color: #888;">
                 No courses added yet.
               </td>
             </tr>
