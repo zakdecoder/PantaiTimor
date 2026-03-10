@@ -104,7 +104,7 @@ PantaiTimor/
 | 1 | Setup & Repository | ✅ Done |
 | 2 | Pre-set Software Construction | ✅ Done |
 | 3 | Course Profile (Class, Create, Search) | ✅ Done |
-| 4 | Course Profile (Edit, Delete, View All) | ⬜ In Progress |
+| 4 | Course Profile (Edit, Delete, View All) | ✅ In Progress |
 | 5-6 | Student Profile (CRUD) | ⬜ Pending |
 | 7-8 | Course-Student Relationship | ⬜ Pending |
 | 9 | System Tests | ⬜ Pending |
