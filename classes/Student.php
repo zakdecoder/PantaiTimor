@@ -1,7 +1,11 @@
 <?php
 /**
  * File: Student.php
+<<<<<<< HEAD
  * Author: Muhammad Ainul Khalis bin Mohd Radzi
+=======
+ * Author: Muhammad Zakariyya Bin Ahmad Radzif
+>>>>>>> 94816a24fdd3259137ea09aed985450724436556
  * Student ID: BSW01085129
  * Date Created: 09/03/2026
  * Last Modified: 16/03/2026

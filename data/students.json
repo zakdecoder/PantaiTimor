@@ -5,6 +5,7 @@
         "student_id": "BSW01085129",
         "email": "BSW01085129@student.uniten.edu.my",
         "phone_number": "0176709783"
+<<<<<<< HEAD
     },
     {
         "first_name": "AHMAD",
@@ -12,5 +13,7 @@
         "student_id": "BSW01085040",
         "email": "BSW01085040@student.uniten.edu.my",
         "phone_number": "0176709780"
+=======
+>>>>>>> 94816a24fdd3259137ea09aed985450724436556
     }
 ]
