@@ -1,8 +1,9 @@
 <!--
   File: enrolment.html
-  Author: Group 1 - PantaiTimor
-  Date: 23/02/2026
-  Description: Placeholder for Enrolment page (Lab 7-8).
+  Author: Muhammad Ainul Khalis bin Mohd Radzi
+  Date: 30/03/2026
+  Description: Enrolment management page. Enrol students to courses,
+               list courses by student, list students by course, view all.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -22,13 +23,96 @@
       <li><a href="enrolment.html" class="active">Enrolment</a></li>
     </ul>
   </nav>
+
   <div class="container">
+    <h1 class="page-title">Course-Student Enrolment</h1>
+
+    <!-- ENROL -->
     <div class="card">
-      <div class="empty-state">
-        <p>Enrolment module Coming Soon.</p>
+      <h2 class="card-title">Enrol Student to Course</h2>
+      <div id="enrolMessage" class="message"></div>
+      <form id="enrolForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="enrolCourseCode">Course Code</label>
+            <input type="text" id="enrolCourseCode" list="courseList1" placeholder="Type to search courses..." required>
+            <datalist id="courseList1" class="course-suggestions"></datalist>
+          </div>
+          <div class="form-group">
+            <label for="enrolStudentId">Student ID</label>
+            <input type="text" id="enrolStudentId" list="studentList1" placeholder="Type to search students..." required>
+            <datalist id="studentList1" class="student-suggestions"></datalist>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary">Enrol</button>
+          <button type="reset" class="btn btn-secondary">Clear</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- LIST COURSES BY STUDENT -->
+    <div class="card">
+      <h2 class="card-title">List Courses by Student</h2>
+      <div id="listCoursesMessage" class="message"></div>
+      <form id="listCoursesForm">
+        <div class="search-bar">
+          <div class="form-group">
+            <label for="listCoursesStudentId">Enter Student ID</label>
+            <input type="text" id="listCoursesStudentId" list="studentList2" placeholder="e.g. BSW01085129">
+            <datalist id="studentList2" class="student-suggestions"></datalist>
+          </div>
+          <button type="submit" class="btn btn-primary">List Courses</button>
+        </div>
+      </form>
+      <div id="listCoursesResult" class="course-detail" style="margin-top:16px"></div>
+    </div>
+
+    <!-- LIST STUDENTS BY COURSE -->
+    <div class="card">
+      <h2 class="card-title">List Students by Course</h2>
+      <div id="listStudentsMessage" class="message"></div>
+      <form id="listStudentsForm">
+        <div class="search-bar">
+          <div class="form-group">
+            <label for="listStudentsCourseCode">Enter Course Code</label>
+            <input type="text" id="listStudentsCourseCode" list="courseList2" placeholder="e.g. CSEB5223">
+            <datalist id="courseList2" class="course-suggestions"></datalist>
+          </div>
+          <button type="submit" class="btn btn-primary">List Students</button>
+        </div>
+      </form>
+      <div id="listStudentsResult" class="course-detail" style="margin-top:16px"></div>
+    </div>
+
+    <!-- VIEW ALL ENROLMENTS -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2 class="card-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0">All Enrolments</h2>
+        <span id="totalEnrolments" style="font-size:14px;color:#666">Total: 0 enrolment(s)</span>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Course Code</th>
+              <th>Course Name</th>
+              <th>Student ID</th>
+              <th>Student Name</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="enrolmentTableBody">
+            <tr><td colspan="7" style="text-align:center;color:#888">No enrolments yet.</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+
   <div class="footer">SLMS - UNITEN</div>
+  <script src="../assets/js/enrolment-handler.js"></script>
 </body>
 </html>

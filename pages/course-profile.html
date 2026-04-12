@@ -1,9 +1,8 @@
 <!--
   File: course-profile.html
-  Author: Muhammad Zakariyya Bin Ahmad Radzif
-  Date: 23/02/2026
-  Description: Course Profile management page for SLMS.
-               Supports Create, Search, and View All courses.
+  Author: Muhammad Ainul Khalis bin Mohd Radzi
+  Date: 02/03/2026
+  Description: Course Profile management page. Create, Search, Edit, Delete, View All.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -14,8 +13,6 @@
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-
-  <!-- Navigation -->
   <nav class="navbar">
     <a href="../index.html" class="navbar-brand">SLMS - PantaiTimor</a>
     <ul class="navbar-nav">
@@ -25,94 +22,56 @@
       <li><a href="enrolment.html">Enrolment</a></li>
     </ul>
   </nav>
-
   <div class="container">
     <h1 class="page-title">Course Profile Management</h1>
-
-    <!-- ========== CREATE COURSE ========== -->
+    <!-- CREATE -->
     <div class="card">
       <h2 class="card-title">Add New Course</h2>
       <div id="createMessage" class="message"></div>
       <form id="courseForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="courseName">Course Name (Full Name)</label>
-            <input type="text" id="courseName" placeholder="e.g. Software Construction & Methods" required>
-          </div>
-          <div class="form-group">
-            <label for="courseCode">Course Code</label>
-            <input type="text" id="courseCode" placeholder="e.g. CSEB5223" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="creditHour">Credit Hour</label>
-            <input type="number" id="creditHour" min="1" max="6" placeholder="e.g. 3" required>
-          </div>
-          <div class="form-group">
-            <label for="msTeamsLink">MS Teams Link</label>
-            <input type="url" id="msTeamsLink" placeholder="https://teams.microsoft.com/...">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="courseSummary">Course Summary</label>
-          <textarea id="courseSummary" placeholder="Brief description of the course..." required></textarea>
-        </div>
-        <div class="btn-group">
-          <button type="submit" class="btn btn-primary">Submit</button>
-          <button type="reset" class="btn btn-secondary">Clear</button>
-        </div>
+        <div class="form-row"><div class="form-group"><label for="courseName">Course Name (Full Name)</label><input type="text" id="courseName" placeholder="e.g. Software Construction & Methods" required></div><div class="form-group"><label for="courseCode">Course Code</label><input type="text" id="courseCode" placeholder="e.g. CSEB5223" required></div></div>
+        <div class="form-row"><div class="form-group"><label for="creditHour">Credit Hour</label><input type="number" id="creditHour" min="1" max="6" placeholder="e.g. 3" required></div><div class="form-group"><label for="msTeamsLink">MS Teams Link</label><input type="url" id="msTeamsLink" placeholder="https://teams.microsoft.com/..."></div></div>
+        <div class="form-group"><label for="courseSummary">Course Summary</label><textarea id="courseSummary" placeholder="Brief description of the course..." required></textarea></div>
+        <div class="btn-group"><button type="submit" class="btn btn-primary">Submit</button><button type="reset" class="btn btn-secondary">Clear</button></div>
       </form>
     </div>
-
-    <!-- ========== SEARCH COURSE ========== -->
+    <!-- SEARCH -->
     <div class="card">
       <h2 class="card-title">Search Course</h2>
       <div id="searchMessage" class="message"></div>
-      <form id="searchForm">
-        <div class="search-bar">
-          <div class="form-group">
-            <label for="searchCode">Search by Course Code</label>
-            <input type="text" id="searchCode" placeholder="e.g. CSEB5223">
-          </div>
-          <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-      </form>
-      <div id="searchResult" class="course-detail" style="margin-top: 16px;"></div>
+      <form id="searchForm"><div class="search-bar"><div class="form-group"><label for="searchCode">Search by Course Code</label><input type="text" id="searchCode" placeholder="e.g. CSEB5223"></div><button type="submit" class="btn btn-primary">Search</button></div></form>
+      <div id="searchResult" class="course-detail" style="margin-top:16px"></div>
     </div>
-
-    <!-- ========== VIEW ALL COURSES ========== -->
+    <!-- EDIT -->
     <div class="card">
-      <h2 class="card-title">All Courses</h2>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Course Code</th>
-              <th>Course Name</th>
-              <th>Credit Hour</th>
-              <th>Summary</th>
-            </tr>
-          </thead>
-          <tbody id="courseTableBody">
-            <tr>
-              <td colspan="5" style="text-align: center; color: #888;">
-                No courses added yet.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <h2 class="card-title">Edit Course</h2>
+      <div id="editMessage" class="message"></div>
+      <form id="editSearchForm"><div class="search-bar"><div class="form-group"><label for="editSearchCode">Search Course Code to Edit</label><input type="text" id="editSearchCode" placeholder="e.g. CSEB5223"></div><button type="submit" class="btn btn-primary">Find</button></div></form>
+      <div id="editFormContainer" class="course-detail" style="margin-top:16px">
+        <form id="editForm">
+          <div class="form-group"><label for="editCourseCode">Course Code (cannot be changed)</label><input type="text" id="editCourseCode" readonly style="background-color:#e9ecef;cursor:not-allowed"></div>
+          <div class="form-group"><label for="editCourseName">Course Name</label><input type="text" id="editCourseName" required></div>
+          <div class="form-row"><div class="form-group"><label for="editCreditHour">Credit Hour</label><input type="number" id="editCreditHour" min="1" max="6" required></div><div class="form-group"><label for="editMsTeamsLink">MS Teams Link</label><input type="url" id="editMsTeamsLink"></div></div>
+          <div class="form-group"><label for="editCourseSummary">Course Summary</label><textarea id="editCourseSummary" required></textarea></div>
+          <div class="btn-group"><button type="submit" class="btn btn-primary">Save Changes</button><button type="button" class="btn btn-secondary" onclick="hideEditForm()">Cancel</button></div>
+        </form>
       </div>
+      <div id="editedResult" class="course-detail" style="margin-top:16px"></div>
     </div>
-
+    <!-- DELETE -->
+    <div class="card">
+      <h2 class="card-title">Delete Course</h2>
+      <div id="deleteMessage" class="message"></div>
+      <form id="deleteSearchForm"><div class="search-bar"><div class="form-group"><label for="deleteSearchCode">Search Course Code to Delete</label><input type="text" id="deleteSearchCode" placeholder="e.g. CSEB5223"></div><button type="submit" class="btn btn-danger">Find</button></div></form>
+      <div id="deleteConfirmContainer" class="course-detail" style="margin-top:16px"></div>
+    </div>
+    <!-- VIEW ALL -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 class="card-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0">All Courses</h2><span id="totalCourses" style="font-size:14px;color:#666">Total: 0 course(s)</span></div>
+      <div class="table-container"><table><thead><tr><th>#</th><th>Course Code</th><th>Course Name</th><th>Credit Hour</th><th>Summary</th><th>MS Teams</th></tr></thead><tbody id="courseTableBody"><tr><td colspan="6" style="text-align:center;color:#888">No courses added yet.</td></tr></tbody></table></div>
+    </div>
   </div>
-
-  <!-- Footer -->
-  <div class="footer">
-    SLMS - UNITEN
-  </div>
-
+  <div class="footer">SLMS - UNITEN</div>
   <script src="../assets/js/course-handler.js"></script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 <!--
   File: student-profile.html
-  Author: Group 1 - PantaiTimor
-  Date: 23/02/2026
-  Description: Placeholder for Student Profile page (Lab 5-6).
+  Author: Muhammad Ainul Khalis bin Mohd Radzi
+  Date: 09/03/2026
+  Description: Student Profile management page. Create, Search, Edit, Delete, View All.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -23,12 +23,54 @@
     </ul>
   </nav>
   <div class="container">
+    <h1 class="page-title">Student Profile Management</h1>
+    <!-- CREATE -->
     <div class="card">
-      <div class="empty-state">
-        <p>Student Profile Coming Soon.</p>
+      <h2 class="card-title">Add New Student</h2>
+      <div id="createStudentMessage" class="message"></div>
+      <form id="studentForm">
+        <div class="form-row"><div class="form-group"><label for="firstName">First Name</label><input type="text" id="firstName" placeholder="e.g. Muhammad" required></div><div class="form-group"><label for="lastName">Last Name</label><input type="text" id="lastName" placeholder="e.g. Zakariyya" required></div></div>
+        <div class="form-group"><label for="studentId">Student ID</label><input type="text" id="studentId" placeholder="e.g. BSW01085129" required></div>
+        <div class="form-row"><div class="form-group"><label for="studentEmail">Email</label><input type="email" id="studentEmail" placeholder="e.g. student@uniten.edu.my" required></div><div class="form-group"><label for="phoneNumber">Phone Number</label><input type="tel" id="phoneNumber" placeholder="e.g. 012-3456789" required></div></div>
+        <div class="btn-group"><button type="submit" class="btn btn-primary">Submit</button><button type="reset" class="btn btn-secondary">Clear</button></div>
+      </form>
+    </div>
+    <!-- SEARCH -->
+    <div class="card">
+      <h2 class="card-title">Search Student</h2>
+      <div id="searchStudentMessage" class="message"></div>
+      <form id="searchStudentForm"><div class="search-bar"><div class="form-group"><label for="searchStudentId">Search by Student ID</label><input type="text" id="searchStudentId" placeholder="e.g. BSW01085129"></div><button type="submit" class="btn btn-primary">Search</button></div></form>
+      <div id="searchStudentResult" class="course-detail" style="margin-top:16px"></div>
+    </div>
+    <!-- EDIT -->
+    <div class="card">
+      <h2 class="card-title">Edit Student</h2>
+      <div id="editStudentMessage" class="message"></div>
+      <form id="editSearchStudentForm"><div class="search-bar"><div class="form-group"><label for="editSearchStudentId">Search Student ID to Edit</label><input type="text" id="editSearchStudentId" placeholder="e.g. BSW01085129"></div><button type="submit" class="btn btn-primary">Find</button></div></form>
+      <div id="editStudentFormContainer" class="course-detail" style="margin-top:16px">
+        <form id="editStudentForm">
+          <div class="form-group"><label for="editStudentId">Student ID (cannot be changed)</label><input type="text" id="editStudentId" readonly style="background-color:#e9ecef;cursor:not-allowed"></div>
+          <div class="form-row"><div class="form-group"><label for="editFirstName">First Name</label><input type="text" id="editFirstName" required></div><div class="form-group"><label for="editLastName">Last Name</label><input type="text" id="editLastName" required></div></div>
+          <div class="form-row"><div class="form-group"><label for="editStudentEmail">Email</label><input type="email" id="editStudentEmail" required></div><div class="form-group"><label for="editPhoneNumber">Phone Number</label><input type="tel" id="editPhoneNumber" required></div></div>
+          <div class="btn-group"><button type="submit" class="btn btn-primary">Save Changes</button><button type="button" class="btn btn-secondary" onclick="hideEditStudentForm()">Cancel</button></div>
+        </form>
       </div>
+      <div id="editedStudentResult" class="course-detail" style="margin-top:16px"></div>
+    </div>
+    <!-- DELETE -->
+    <div class="card">
+      <h2 class="card-title">Delete Student</h2>
+      <div id="deleteStudentMessage" class="message"></div>
+      <form id="deleteSearchStudentForm"><div class="search-bar"><div class="form-group"><label for="deleteSearchStudentId">Search Student ID to Delete</label><input type="text" id="deleteSearchStudentId" placeholder="e.g. BSW01085129"></div><button type="submit" class="btn btn-danger">Find</button></div></form>
+      <div id="deleteStudentConfirmContainer" class="course-detail" style="margin-top:16px"></div>
+    </div>
+    <!-- VIEW ALL -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 class="card-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0">All Students</h2><span id="totalStudents" style="font-size:14px;color:#666">Total: 0 student(s)</span></div>
+      <div class="table-container"><table><thead><tr><th>#</th><th>Student ID</th><th>Name</th><th>Email</th><th>Phone</th></tr></thead><tbody id="studentTableBody"><tr><td colspan="5" style="text-align:center;color:#888">No students added yet.</td></tr></tbody></table></div>
     </div>
   </div>
   <div class="footer">SLMS - UNITEN</div>
+  <script src="../assets/js/student-handler.js"></script>
 </body>
 </html>

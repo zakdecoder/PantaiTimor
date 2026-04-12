@@ -1,75 +1,82 @@
 <?php
 /**
  * File: course-controller.php
- * Author: Muhammad Zakariyya Bin Ahmad Radzif
- * Student ID: BSW01085129
+ * Author: Muhammad Ainul Khalis bin Mohd Radzi
+ * Student ID: BSW01085030
  * Date Created: 23/02/2026
- * Last Modified: 02/03/2026
+ * Last Modified: 13/04/2026
  * Description: API controller for Course operations.
  *              Handles Create, Search, Edit, Delete and GetAll.
- *              Data is stored in a JSON file to persist between requests.
  */
 
 require_once __DIR__ . '/../classes/Course.php';
 
-// Allow cross-origin requests for frontend
+// Set response headers for JSON API
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight requests
+// Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
-// Path to store course data
+// Constants
 define('DATA_FILE', __DIR__ . '/../data/courses.json');
 define('MAX_COURSES', 100);
 
+
+// ========== DATA FUNCTIONS ==========
+
 /**
- * Loads all courses from the JSON data file.
- * @return array Array of course data.
+ * Loads all courses from the JSON file.
+ * Returns empty array if file doesn't exist yet.
  */
 function loadCourses(): array {
     if (!file_exists(DATA_FILE)) {
         return [];
     }
+
     $json = file_get_contents(DATA_FILE);
     return json_decode($json, true) ?? [];
 }
 
 /**
- * Saves all courses to the JSON data file.
- * @param array $courses Array of course data to save.
+ * Saves the courses array to JSON file.
+ * Creates the data directory if it doesn't exist.
  */
 function saveCourses(array $courses): void {
     $dir = dirname(DATA_FILE);
+
     if (!is_dir($dir)) {
         mkdir($dir, 0755, true);
     }
+
     file_put_contents(DATA_FILE, json_encode($courses, JSON_PRETTY_PRINT));
 }
 
 /**
- * Finds the index of a course by course code using linear search.
- * @param array $courses The array of courses to search.
- * @param string $courseCode The course code to find.
- * @return int The index if found, -1 otherwise.
+ * Finds the index of a course by its code using linear search.
+ * Returns -1 if not found.
  */
-function findCourseIndex(array $courses, string $courseCode): int {
+function findCourseIndex(array $courses, string $code): int {
     for ($i = 0; $i < count($courses); $i++) {
-        if (strtoupper($courses[$i]['course_code']) === strtoupper(trim($courseCode))) {
+        if (strtoupper($courses[$i]['course_code']) === strtoupper(trim($code))) {
             return $i;
         }
     }
+
     return -1;
 }
 
+
+// ========== CREATE ==========
+
 /**
- * Handles adding a new course.
- * Validates input and checks for duplicate course code.
+ * Adds a new course to the system.
+ * Validates input, checks for duplicates, and enforces array limit.
  */
 function createCourse(): void {
     $input = json_decode(file_get_contents('php://input'), true);
@@ -79,6 +86,7 @@ function createCourse(): void {
         return;
     }
 
+    // Create course object from input
     $course = new Course(
         $input['course_name'] ?? '',
         $input['course_code'] ?? '',
@@ -87,6 +95,7 @@ function createCourse(): void {
         $input['ms_teams_link'] ?? ''
     );
 
+    // Validate the course data
     $errors = $course->validate();
     if (!empty($errors)) {
         echo json_encode(['success' => false, 'message' => implode(' ', $errors)]);
@@ -95,18 +104,19 @@ function createCourse(): void {
 
     $courses = loadCourses();
 
-    // Check array bounds to prevent overflow
+    // Check if we've hit the max limit
     if (count($courses) >= MAX_COURSES) {
-        echo json_encode(['success' => false, 'message' => 'Maximum course limit reached (' . MAX_COURSES . ').']);
+        echo json_encode(['success' => false, 'message' => 'Maximum course limit reached.']);
         return;
     }
 
-    // Check for duplicate course code
+    // Make sure the course code doesn't already exist
     if (findCourseIndex($courses, $course->getCourseCode()) !== -1) {
         echo json_encode(['success' => false, 'message' => 'Course code already exists.']);
         return;
     }
 
+    // All good — add and save
     $courses[] = $course->toArray();
     saveCourses($courses);
 
@@ -117,20 +127,23 @@ function createCourse(): void {
     ]);
 }
 
+
+// ========== SEARCH ==========
+
 /**
- * Handles searching for a course by course code.
- * Uses linear search to find the matching course.
+ * Searches for a course by its code.
+ * Uses linear search through the courses array.
  */
 function searchCourse(): void {
-    $courseCode = $_GET['course_code'] ?? '';
+    $code = $_GET['course_code'] ?? '';
 
-    if (empty(trim($courseCode))) {
+    if (empty(trim($code))) {
         echo json_encode(['success' => false, 'message' => 'Please enter a course code to search.']);
         return;
     }
 
     $courses = loadCourses();
-    $index = findCourseIndex($courses, $courseCode);
+    $index = findCourseIndex($courses, $code);
 
     if ($index !== -1) {
         echo json_encode([
@@ -143,9 +156,12 @@ function searchCourse(): void {
     }
 }
 
+
+// ========== EDIT ==========
+
 /**
- * Handles editing a course.
- * Searches by course code, then updates all attributes except course code.
+ * Updates an existing course.
+ * Course code cannot be changed — only other fields are updated.
  */
 function editCourse(): void {
     $input = json_decode(file_get_contents('php://input'), true);
@@ -155,24 +171,26 @@ function editCourse(): void {
         return;
     }
 
-    $courseCode = $input['course_code'] ?? '';
-    if (empty(trim($courseCode))) {
+    $code = $input['course_code'] ?? '';
+
+    if (empty(trim($code))) {
         echo json_encode(['success' => false, 'message' => 'Course code is required.']);
         return;
     }
 
     $courses = loadCourses();
-    $index = findCourseIndex($courses, $courseCode);
+    $index = findCourseIndex($courses, $code);
 
+    // Course must exist to be edited
     if ($index === -1) {
         echo json_encode(['success' => false, 'message' => 'Course not found.']);
         return;
     }
 
-    // Create Course object with updated data for validation
+    // Build updated course object for validation
     $course = new Course(
         $input['course_name'] ?? $courses[$index]['course_name'],
-        $courseCode,
+        $code,
         (int)($input['credit_hour'] ?? $courses[$index]['credit_hour']),
         $input['course_summary'] ?? $courses[$index]['course_summary'],
         $input['ms_teams_link'] ?? $courses[$index]['ms_teams_link']
@@ -184,7 +202,7 @@ function editCourse(): void {
         return;
     }
 
-    // Update all attributes except course code
+    // Update the fields (course code stays the same)
     $courses[$index]['course_name'] = $course->getCourseName();
     $courses[$index]['credit_hour'] = $course->getCreditHour();
     $courses[$index]['course_summary'] = $course->getCourseSummary();
@@ -199,46 +217,53 @@ function editCourse(): void {
     ]);
 }
 
+
+// ========== DELETE ==========
+
 /**
- * Handles deleting a course.
- * Searches by course code, confirms and removes from array.
+ * Deletes a course from the system.
+ * Removes it from the array and saves.
  */
 function deleteCourse(): void {
-    $courseCode = $_GET['course_code'] ?? '';
+    $code = $_GET['course_code'] ?? '';
 
-    if (empty(trim($courseCode))) {
+    if (empty(trim($code))) {
         echo json_encode(['success' => false, 'message' => 'Course code is required.']);
         return;
     }
 
     $courses = loadCourses();
-    $index = findCourseIndex($courses, $courseCode);
+    $index = findCourseIndex($courses, $code);
 
     if ($index === -1) {
         echo json_encode(['success' => false, 'message' => 'Course not found.']);
         return;
     }
 
-    // Store deleted course info for response
-    $deletedCourse = $courses[$index];
+    // Keep a copy for the response message
+    $deleted = $courses[$index];
 
-    // Remove course from array
+    // Remove from array and save
     array_splice($courses, $index, 1);
     saveCourses($courses);
 
     echo json_encode([
         'success' => true,
-        'message' => 'Course "' . $deletedCourse['course_code'] . '" deleted successfully.',
+        'message' => 'Course "' . $deleted['course_code'] . '" deleted successfully.',
         'courses' => $courses,
         'total' => count($courses)
     ]);
 }
 
+
+// ========== GET ALL ==========
+
 /**
- * Returns all stored courses.
+ * Returns all courses in the system.
  */
 function getAllCourses(): void {
     $courses = loadCourses();
+
     echo json_encode([
         'success' => true,
         'courses' => $courses,
@@ -246,7 +271,9 @@ function getAllCourses(): void {
     ]);
 }
 
-// ========== ROUTE REQUESTS ==========
+
+// ========== ROUTING ==========
+
 $action = $_GET['action'] ?? '';
 
 switch ($action) {
@@ -267,5 +294,4 @@ switch ($action) {
         break;
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid action.']);
-        break;
 }
